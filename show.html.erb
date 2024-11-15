@@ -1,0 +1,26 @@
+
+<div class="recent-activities box">
+  <h3 class="icon icon-news">작업 내역</h3>
+  <% begin %>
+    <% fetcher = Redmine::Activity::Fetcher.new(User.current, project: @project) %>
+    <% recent_events = fetcher.events(nil, nil, limit: 10) %>
+    <% if recent_events.any? %>
+      <ul class="recent-activities-list">
+        <% recent_events.each do |event| %>
+          <li>
+            <%= link_to event.event_title, event.event_url %> - 
+            <span style="font-size: x-small; color: gray;">
+              <%= event.event_datetime.strftime('%Y/%m/%d %H:%M') %> 
+              (<%= event.author.name if event.respond_to?(:author) %>)
+            </span>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>최근 작업 내역이 없습니다.</p>
+    <% end %>
+  <% rescue => e %>
+    <p>오류가 발생했습니다: <%= e.message %></p>
+  <% end %>
+</div>
+
