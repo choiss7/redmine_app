@@ -1,5 +1,12 @@
 vi /opt/bitnami/redmine/app/views/projects/show.html.erb
 
+프로젝트 개요 수정
+
+1. 개요 사이드 바 출력
+
+2. 오른쪽 작업 내역 박스 추가 
+
+
 <div class="recent-activities box">
   <h3 class="icon icon-news">작업 내역</h3>
   <% begin %>
@@ -24,4 +31,21 @@ vi /opt/bitnami/redmine/app/views/projects/show.html.erb
     <p>오류가 발생했습니다: <%= e.message %></p>
   <% end %>
 </div>
+
+
+
+
+
+<% content_for :sidebar do %>
+  <!-- 위키 매크로 렌더링 -->
+  <% if @project && @project.wiki && @project.wiki.find_page('Sidebar') %>
+    <% sidebar_page = @project.wiki.find_page('Sidebar') %>
+    <%= textilizable(sidebar_page.content.text) %>
+  <% else %>
+    <p>위키 내용을 사용할 수 없습니다.</p>
+  <% end %>
+
+  <%= call_hook(:view_projects_show_sidebar_bottom, :project => @project) %>
+<% end %>
+
 
